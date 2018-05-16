@@ -8,6 +8,8 @@ import iView from 'iview'
 import 'common/stylus/index.styl'
 import Cookie from 'js-cookie'
 import VueClipboard from 'vue-clipboard2'
+import 'babel-polyfill'
+
 
 Vue.use(VueClipboard)
 Vue.config.productionTip = false
