@@ -34,3 +34,23 @@ export function formatDateTime (inputTime) {
     return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second
   }
 }
+
+export function formatDate(date, format) {
+  var fmt = format || 'yyyy-MM-dd HH:mm';
+  var day = new Date(date * 1000);
+
+  let o = {
+    'M+': day.getMonth() + 1, // 月份
+    'd+': day.getDate(), // 日
+    'H+': day.getHours(), // 小时
+    'm+': day.getMinutes(), // 分
+    's+': day.getSeconds(), // 秒
+    'q+': Math.floor((day.getMonth() + 3) / 3), // 季度
+    'S': day.getMilliseconds() // 毫秒
+  }
+  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (day.getFullYear() + '').substr(4 - RegExp.$1.length))
+  for (let k in o) {
+    if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+  }
+  return fmt;
+}

@@ -56,7 +56,7 @@
             <img src="../../assets/icon-add-img.png" width="280" height="190"/>
           </upload-img>
         </FormItem>
-        <p class="grev" style="margin-left:180px;margin-bottom: 20px;">可以上传多张图片，建议：xxx.jpg,xxx.png,图片小于5M</p>
+        <p class="grev" style="margin-left:180px;margin-bottom: 20px;">可以上传多张图片，建议：750 * 470px, jpg,png格式,图片小于5M</p>
         <FormItem label="收费类型">
           <div class="tab">
             <div class="tab-title">
@@ -75,10 +75,30 @@
             <div class="tab-content cash" v-show="formValidate.pay_type === 1">
               <p>设置一个固定金额</p>
               <Input type="number" placeholder="最少金额1元" v-model="formValidate.price"></Input>
+              <p class="mt10">
+                <span class="mr20">设置邀请奖励</span><i-switch v-model="isInvite"></i-switch>
+              </p>
+              <p class="mt10" v-if="isInvite">
+                <span class="mr20">分成比例（%）</span>
+                <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate" style="width: 250px;"></Input>
+              </p>
+              <p class="mt10" v-if="isInvite">
+                <span class="mr20">分成</span>{{sharePrice}}
+              </p>
             </div>
             <div class="tab-content bean" v-show="formValidate.pay_type === 2">
               <p>设置一个固定智豆数量</p>
               <Input type="number" placeholder="最少1个智豆" v-model="formValidate.price"></Input>
+              <p class="mt10">
+                <span class="mr20">设置邀请奖励</span><i-switch v-model="isInvite"></i-switch>
+              </p>
+              <p class="mt10" v-if="isInvite">
+                <span class="mr20">分成比例（%）</span>
+                <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate" style="width: 250px;"></Input>
+              </p>
+              <p class="mt10" v-if="isInvite">
+                <span class="mr20">分成</span>{{sharePrice}}
+              </p>
             </div>
           </div>
         </FormItem>
@@ -105,7 +125,8 @@
           <!-- <Button type="ghost" icon="document-text" @click="addIntroText">添加文字</Button>-->
         </FormItem>
         <FormItem>
-          <Button type="primary" @click.stop="handleSubmit('formValidate')" size="large" style="width: 200px;">保存</Button>
+          <Button type="primary" @click.stop="handleSubmit('formValidate')" size="large" style="width: 200px;">保存
+          </Button>
         </FormItem>
       </Form>
     </div>
@@ -123,6 +144,7 @@
     },
     data() {
       return {
+        isInvite: false, // 是否是分销课程
         uploadPercent: 0,
         uploadStatus: false,
         title: '',// 课程简介
@@ -137,7 +159,9 @@
           price: '', // 课程价格
           period_type: 1, // 上课类型
           pay_type: 0, // 支付类型
-          category_id: '' //课程类目
+          category_id: '', //课程类目
+          share_gain_rate: '', // 分享提成比例
+          is_share_gain: 0 // 0不是 1 是
         },
         ruleInline: {
           name: [
@@ -163,6 +187,15 @@
     created() {
       this.getResourceGuide()
       this.getUploadAudioKey()
+    },
+    computed: {
+      sharePrice() {
+        if (this.isInvite && this.formValidate.pay_type == 1 && this.formValidate.share_gain_rate <= 100) {
+          return (this.formValidate.share_gain_rate / 100 * this.formValidate.price).toFixed(1)
+        } else if (this.isInvite && this.formValidate.pay_type == 2 && this.formValidate.share_gain_rate <= 100) {
+          return Math.floor(this.formValidate.share_gain_rate / 100 * this.formValidate.price)
+        }
+      }
     },
     methods: {
       // 添加课程简介图片
@@ -193,12 +226,23 @@
               message = '输入金额不正确'
             } else if (params.pay_type === 2 && !(params.price && params.price > 1)) {
               message = '输入智豆数量不正确'
+            } else if (this.isInvite && !params.share_gain_rate) {
+              message = '分享提成比例不能为空';
+            } else if (this.isInvite && params.share_gain_rate < 0) {
+              message = '分享提成比例大于0或小于100'
+            } else if (this.isInvite && params.share_gain_rate > 100) {
+              message = '分享提成比例大于0小于100'
             }
             if (message) {
               this.$Notice.error({
                 title: message
               })
               return
+            }
+            if (this.isInvite) {
+              params.is_share_gain = 1
+            } else {
+              params.is_share_gain = 0
             }
             if (this.list.length > 0) {
               let fileIds = [];
@@ -282,7 +326,7 @@
                     title: '上传失败！',
                   })
                 },
-                progress: function(result){
+                progress: function (result) {
                   vm.uploadPercent = result.curr * 100
                   console.log('上传进度：' + result.curr);
                 },
@@ -382,7 +426,7 @@
               &.active
                 background url("../../assets/icon-bean-active.png") no-repeat center
           .tab-content
-            height 90px
+            min-height 90px
             border 1px solid #dddee1
             padding 10px 20px
             position relative

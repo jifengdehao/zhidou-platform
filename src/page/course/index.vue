@@ -37,7 +37,7 @@
 
 <script>
   import * as api from '@/api/common'
-  import {formatDateTime} from '@/util/time'
+  import {formatDate} from '@/util/time'
 
   export default {
     name: 'course',
@@ -127,7 +127,7 @@
             align: 'center',
             key: 'times',
             render: (h, params) => {
-              return h('span', formatDateTime(params.row.times))
+              return h('span', formatDate(params.row.times))
             }
           },
           {

@@ -38,8 +38,8 @@
         </h2>
       </Col>
       <Col span="24" class="mt20">
-        <img :src="qrcode" alt="" width="120" height="110"/>
-        <h4 class="mt20">&nbsp;&nbsp;微信扫码进入直播间</h4>
+        <img :src="qrcode" alt="" width="180" height="170"/>
+        <h4 class="mt20">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;微信扫码进入直播间</h4>
       </Col>
     </Row>
   </div>
@@ -60,7 +60,7 @@
         return '/api' + '/user/anchor/qr-code'
       },
       linkUrl() {
-        return 'https：www.zhiliaotv.com/zhanshan/live/16546'
+        return 'http:www.zhiliaotv.com/classroom'
       }
     },
     created() {

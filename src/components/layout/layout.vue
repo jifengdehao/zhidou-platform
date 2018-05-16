@@ -12,7 +12,7 @@
       </Row>
     </div>
     <div class="layout-content">
-      <Row type="flex" style="height: 100%;">
+      <Row type='flex' style="height: 100%;overflow: hidden;">
         <Col :xs="3" :sm="3" :md="3" :lg="3" style="background-color:#495060;">
           <Menu active-name="home" theme="dark" width="auto"
                 @on-select="route"
@@ -32,7 +32,7 @@
             </Submenu>
           </Menu>
         </Col>
-        <Col :xs="21" :sm="21" :md="21" :lg="21" style="padding: 20px;overflow-y: scroll">
+        <Col :xs="21" :sm="21" :md="21" :lg="21" style="padding: 20px;overflow-y: auto;height: 100%;">
           <router-view/>
         </Col>
       </Row>

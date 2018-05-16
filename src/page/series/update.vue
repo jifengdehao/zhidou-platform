@@ -24,9 +24,33 @@
         </FormItem>
         <FormItem label="价格" prop="price" v-show="formValidate.pay_type === 1">
           <Input v-model.trim="formValidate.price" placeholder="最少金额1元"></Input>
+          <p class="mt10">
+            <span class="mr20">设置邀请奖励</span>
+            <i-switch v-model="isInvite"></i-switch>
+          </p>
+          <p class="mt10" v-if="isInvite">
+            <span class="mr20">分成比例（%）</span>
+            <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate"
+                   style="width: 250px;"></Input>
+          </p>
+          <p class="mt10" v-if="isInvite">
+            <span class="mr20">分成</span>{{sharePrice}}
+          </p>
         </FormItem>
         <FormItem label="价格" prop="price" v-show="formValidate.pay_type === 2">
           <Input v-model.trim="formValidate.price" placeholder="最少1个智豆"></Input>
+          <p class="mt10">
+            <span class="mr20">设置邀请奖励</span>
+            <i-switch v-model="isInvite"></i-switch>
+          </p>
+          <p class="mt10" v-if="isInvite">
+            <span class="mr20">分成比例（%）</span>
+            <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate"
+                   style="width: 250px;"></Input>
+          </p>
+          <p class="mt10" v-if="isInvite">
+            <span class="mr20">分成</span>{{sharePrice}}
+          </p>
         </FormItem>
         <FormItem label="密码" prop="pwd" v-show="formValidate.pay_type === 3">
           <Input v-model.trim="formValidate.pwd" placeholder="请输入密码"></Input>
@@ -45,7 +69,7 @@
             <img src="../../assets/icon-add-img.png" width="280" height="190"/>
           </upload-img>
         </FormItem>
-        <p class="grev" style="margin-left:180px;margin-bottom: 20px;">可以上传多张图片，建议：800 * 500px, jpg,png格式,图片小于5M</p>
+        <p class="grev" style="margin-left:180px;margin-bottom: 20px;">可以上传多张图片，建议：750 * 470px, jpg,png格式,图片小于5M</p>
         <FormItem label="课程简介" prop="intro">
           <div v-for="(item,index) in courseIntro" :key="index">
             <img :src="item.url" width="280" height="190" v-if="item.url" class="mb20"/>
@@ -83,6 +107,7 @@
     name: 'updateSeries',
     data() {
       return {
+        isInvite: false,
         courseIntro: [],
         formValidate: {
           id: this.$route.params.id, // 系列课的id
@@ -94,7 +119,9 @@
           course_type: 1, // 系列课
           intro: '', // 课程简介
           images: '',// 课程banner图
-          category_id: '' // 系列课分类
+          category_id: '', // 系列课分类
+          share_gain_rate: '', // 分成比例
+          is_share_gain: 0 // 0不是 1 是
         },
         ruleValidate: {
           name: [
@@ -127,6 +154,15 @@
       this.getResourceGuide()
       this.getSeriesDetails(this.formValidate.id)
     },
+    computed: {
+      sharePrice() {
+        if (this.isInvite && this.formValidate.pay_type == 1 && this.formValidate.share_gain_rate <= 100) {
+          return (this.formValidate.share_gain_rate / 100 * this.formValidate.price).toFixed(1)
+        } else if (this.isInvite && this.formValidate.pay_type == 2 && this.formValidate.share_gain_rate <= 100) {
+          return Math.floor(this.formValidate.share_gain_rate / 100 * this.formValidate.price)
+        }
+      }
+    },
     methods: {
       uploadIntroImg(data) {
         console.log(data)
@@ -145,6 +181,12 @@
             this.formValidate.pwd = res.pwd
             this.formValidate.price = res.price
             this.formValidate.category_id = res.category
+            this.formValidate.share_gain_rate = res.share_rate
+            if (res.is_share == 1) {
+              this.isInvite = true
+            } else {
+              this.isInvite = false
+            }
             this.list = res.img
             this.courseIntro = res.note
           }
@@ -167,18 +209,29 @@
               message = '请填写具体的开课节数'
             } else if (!this.list.length > 0) {
               message = '请上传课程banner图'
-            }else if (params.pay_type === 3 && !(params.pwd && params.pwd.length > 4)) {
+            } else if (params.pay_type === 3 && !(params.pwd && params.pwd.length > 4)) {
               message = '输入密码不正确'
             } else if (params.pay_type === 1 && !(params.price && params.price > 1)) {
               message = '输入金额不正确'
             } else if (params.pay_type === 2 && !(params.price && params.price > 1)) {
               message = '输入智豆数量不正确'
+            } else if (this.isInvite && !params.share_gain_rate) {
+              message = '分享提成比例不能为空';
+            } else if (this.isInvite && params.share_gain_rate < 0) {
+              message = '分享提成比例大于0或小于100'
+            } else if (this.isInvite && params.share_gain_rate > 100) {
+              message = '分享提成比例大于0小于100'
             }
             if (message) {
               this.$Notice.error({
                 title: message
               })
               return
+            }
+            if (this.isInvite) {
+              params.is_share_gain = 1
+            } else {
+              params.is_share_gain = 0
             }
             let fileIds = [];
             this.list.forEach((item) => {

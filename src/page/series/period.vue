@@ -64,7 +64,7 @@
       </Row>
       <Row class="list-group">
         <Col span="21" offset="3">
-          <Button type="primary" size="large">进入直播间</Button>
+          <Button type="primary" size="large" style="width: 200px;" @click="goToTeach">进入直播间</Button>
         </Col>
       </Row>
     </div>
@@ -92,6 +92,9 @@
       this.player = null
     },
     methods: {
+      goToTeach() {
+        window.open('http://wwww.zhiliaotv.com/course/teach/' + this.id)
+      },
       formatSolution(s) {
         if (s) {
           return s.replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')

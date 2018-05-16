@@ -77,7 +77,7 @@
       </Row>
       <Row class="list-group">
         <Col span="21" offset="3">
-          <Button type="primary" size="large">进入直播间</Button>
+          <Button type="primary" size="large" style="width: 200px;" @click="goToTeach">进入直播间</Button>
         </Col>
       </Row>
     </div>
@@ -102,10 +102,15 @@
       this.getCourseDetails()
     },
     beforeDestroy() {
-      this.player.dispose()
-      this.player = null
+      if (this.player) {
+        this.player.dispose()
+        this.player = null
+      }
     },
     methods: {
+      goToTeach() {
+        window.open('http://wwww.zhiliaotv.com/course/teach/' + this.id)
+      },
       formatSolution(s) {
         if (s) {
           return s.replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
@@ -179,6 +184,6 @@
           border-radius 4px
           line-height 2
           img
-             display block
+            display block
 
 </style>
