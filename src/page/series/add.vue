@@ -190,9 +190,9 @@
               message = '密码不能为空'
             } else if (params.pay_type === 3 && !(/^[0-9a-zA-Z]+$/).test(params.pwd)) {
               message = '密码输入不正确'
-            } else if (params.pay_type === 1 && !(params.price && params.price > 1)) {
+            } else if (params.pay_type === 1 && !(params.price && params.price >= 1)) {
               message = '输入金额不正确'
-            } else if (params.pay_type === 2 && !(params.price && params.price > 1)) {
+            } else if (params.pay_type === 2 && !(params.price && params.price >= 1)) {
               message = '输入智豆数量不正确'
             } else if (this.isInvite && !params.share_gain_rate) {
               message = '分享提成比例不能为空';
@@ -200,6 +200,8 @@
               message = '分享提成比例大于0或小于100'
             } else if (this.isInvite && params.share_gain_rate > 100) {
               message = '分享提成比例大于0小于100'
+            } else if (this.isInvite && this.sharePrice <= 0) {
+              message = '分享不能为零'
             }
             if (message) {
               this.$Notice.error({

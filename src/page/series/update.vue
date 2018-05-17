@@ -211,9 +211,9 @@
               message = '请上传课程banner图'
             } else if (params.pay_type === 3 && !(params.pwd && params.pwd.length > 4)) {
               message = '输入密码不正确'
-            } else if (params.pay_type === 1 && !(params.price && params.price > 1)) {
+            } else if (params.pay_type === 1 && !(params.price && params.price >= 1)) {
               message = '输入金额不正确'
-            } else if (params.pay_type === 2 && !(params.price && params.price > 1)) {
+            } else if (params.pay_type === 2 && !(params.price && params.price >= 1)) {
               message = '输入智豆数量不正确'
             } else if (this.isInvite && !params.share_gain_rate) {
               message = '分享提成比例不能为空';
@@ -221,6 +221,8 @@
               message = '分享提成比例大于0或小于100'
             } else if (this.isInvite && params.share_gain_rate > 100) {
               message = '分享提成比例大于0小于100'
+            } else if (this.isInvite && this.sharePrice <= 0) {
+              message = '分享不能为零'
             }
             if (message) {
               this.$Notice.error({

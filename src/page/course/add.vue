@@ -76,11 +76,13 @@
               <p>设置一个固定金额</p>
               <Input type="number" placeholder="最少金额1元" v-model="formValidate.price"></Input>
               <p class="mt10">
-                <span class="mr20">设置邀请奖励</span><i-switch v-model="isInvite"></i-switch>
+                <span class="mr20">设置邀请奖励</span>
+                <i-switch v-model="isInvite"></i-switch>
               </p>
               <p class="mt10" v-if="isInvite">
                 <span class="mr20">分成比例（%）</span>
-                <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate" style="width: 250px;"></Input>
+                <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate"
+                       style="width: 250px;"></Input>
               </p>
               <p class="mt10" v-if="isInvite">
                 <span class="mr20">分成</span>{{sharePrice}}
@@ -90,11 +92,13 @@
               <p>设置一个固定智豆数量</p>
               <Input type="number" placeholder="最少1个智豆" v-model="formValidate.price"></Input>
               <p class="mt10">
-                <span class="mr20">设置邀请奖励</span><i-switch v-model="isInvite"></i-switch>
+                <span class="mr20">设置邀请奖励</span>
+                <i-switch v-model="isInvite"></i-switch>
               </p>
               <p class="mt10" v-if="isInvite">
                 <span class="mr20">分成比例（%）</span>
-                <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate" style="width: 250px;"></Input>
+                <Input type="number" placeholder="请输入分成比例，比例必须是整数" v-model="formValidate.share_gain_rate"
+                       style="width: 250px;"></Input>
               </p>
               <p class="mt10" v-if="isInvite">
                 <span class="mr20">分成</span>{{sharePrice}}
@@ -222,9 +226,9 @@
               message = '密码不能为空'
             } else if (params.pay_type === 3 && !(/^[0-9a-zA-Z]+$/).test(params.pwd)) {
               message = '密码输入不正确'
-            } else if (params.pay_type === 1 && !(params.price && params.price > 1)) {
+            } else if (params.pay_type === 1 && !(params.price && params.price >= 1)) {
               message = '输入金额不正确'
-            } else if (params.pay_type === 2 && !(params.price && params.price > 1)) {
+            } else if (params.pay_type === 2 && !(params.price && params.price >= 1)) {
               message = '输入智豆数量不正确'
             } else if (this.isInvite && !params.share_gain_rate) {
               message = '分享提成比例不能为空';
@@ -232,6 +236,8 @@
               message = '分享提成比例大于0或小于100'
             } else if (this.isInvite && params.share_gain_rate > 100) {
               message = '分享提成比例大于0小于100'
+            } else if (this.isInvite && this.sharePrice <= 0) {
+              message = '分享不能为零'
             }
             if (message) {
               this.$Notice.error({
