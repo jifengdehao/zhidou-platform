@@ -1,7 +1,7 @@
 /**
- * @author zhangwenlong
- * @date 2018/4/27
- * @Description: 系列课
+* @author zhangwenlong
+* @date 2018/4/27
+* @Description: 系列课
 */
 <template>
   <div class="course">
@@ -12,14 +12,14 @@
     <div class="search">
       <Form ref="formInline" :model="formInline" inline :label-width="80">
         <Input type="text" v-model.trim="formInline.name" placeholder="请输入课程标题" style="width: 200px;"
-               icon="search" @on-click="search" @keyup.enter.native="search">
+               icon="search" @on-change="search" @keyup.enter.native="search">
         </Input>
         <FormItem label="时间">
           <DatePicker type="datetime" placeholder="请输入时间" v-model="formInline.start"
-                      style="width:200px" @on-ok="selectDate"></DatePicker>
+                      style="width:200px" @on-change="selectStartDate"></DatePicker>
           <span style="margin: 0 5px;">-</span>
           <DatePicker type="datetime" placeholder="请输入时间" v-model="formInline.end" style="width:200px"
-                      @on-ok="selectDate"></DatePicker>
+                      @on-change="selectEndDate"></DatePicker>
         </FormItem>
       </Form>
     </div>
@@ -189,6 +189,16 @@
         this.getCorseList()
       },
       selectDate() {
+        this.formInline.page = 1
+        this.getCorseList()
+      },
+      selectStartDate(current) {
+        console.log(current)
+        this.formInline.page = 1
+        this.getCorseList()
+      },
+      selectEndDate(current) {
+        console.log(current)
         this.formInline.page = 1
         this.getCorseList()
       }

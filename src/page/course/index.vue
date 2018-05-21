@@ -11,10 +11,10 @@
         </Input>
         <FormItem label="时间">
           <DatePicker type="datetime" placeholder="请输入时间" v-model="formInline.start"
-                      style="width:200px" @on-ok="selectDate"></DatePicker>
+                      style="width:200px" @on-change="selectStartDate"></DatePicker>
           <span style="margin: 0 5px;">-</span>
           <DatePicker type="datetime" placeholder="请输入时间" v-model="formInline.end" style="width:200px"
-                      @on-ok="selectDate"></DatePicker>
+                      @on-change="selectEndDate"></DatePicker>
         </FormItem>
         <FormItem label="审核状态">
           <Select v-model="formInline.status" style="width:200px" @on-change="selectStatus" clearable>
@@ -260,7 +260,17 @@
       selectDate() {
         this.formInline.page = 1
         this.getCorseList()
-      }
+      },
+      selectStartDate(current) {
+        this.formInline.page = 1
+        this.getCorseList()
+        console.log(current)
+      },
+      selectEndDate(current) {
+        this.formInline.page = 1
+        this.getCorseList()
+        console.log(current)
+      },
     }
   }
 </script>
