@@ -93,7 +93,7 @@
     },
     methods: {
       goToTeach() {
-        window.open('http://wwww.zhiliaotv.com/course/teach/' + this.id)
+        window.open('http://www.zhiliaotv.com/classroom/series/period/teach/' + this.period.course_id + '/' + this.id)
       },
       formatSolution(s) {
         if (s) {
