@@ -42,7 +42,7 @@
           </div>
           <p class="grev">音频文件目前支持MP3格式，视频文件支持MP4格式</p>
         </FormItem>
-        <FormItem label="课程分类">
+        <FormItem label="课程分类" prop="category_id">
           <Select v-model="formValidate.category_id">
             <Option v-for="item in categoryList" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>

@@ -17,12 +17,12 @@
                       @on-ok="selectDate"></DatePicker>
         </FormItem>
         <FormItem label="审核状态">
-          <Select v-model="formInline.status" style="width:200px" @on-change="selectStatus">
+          <Select v-model="formInline.status" style="width:200px" @on-change="selectStatus" clearable>
             <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="上课方式">
-          <Select v-model="formInline.type" style="width:200px" @on-change="selectMode">
+          <Select v-model="formInline.type" style="width:200px" @on-change="selectMode" clearable>
             <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -236,16 +236,26 @@
         this.getCorseList()
       },
       selectStatus(value) {
-        console.log(value)
-        this.formInline.page = 1
-        this.formInline.status = parseInt(value)
-        this.getCorseList()
+        if (value) {
+          this.formInline.page = 1
+          this.formInline.status = parseInt(value)
+          this.getCorseList()
+        } else {
+          this.formInline.page = 1
+          this.formInline.status = ''
+          this.getCorseList()
+        }
       },
       selectMode(value) {
-        console.log(value)
-        this.formInline.type = parseInt(value)
-        this.formInline.page = 1
-        this.getCorseList()
+        if (value) {
+          this.formInline.type = parseInt(value)
+          this.formInline.page = 1
+          this.getCorseList()
+        } else {
+          this.formInline.type = ''
+          this.formInline.page = 1
+          this.getCorseList()
+        }
       },
       selectDate() {
         this.formInline.page = 1

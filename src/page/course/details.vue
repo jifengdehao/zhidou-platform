@@ -7,7 +7,7 @@
     <div class="content vm-clearfix">
       <Row class="list-group">
         <Col span="3" class="title">课程标题</COL>
-        <Col span="21">{{course.title}}</Col>
+        <Col span="21" v-html="formatTitle(course.title)"></Col>
       </Row>
       <Row class="list-group">
         <Col span="3" class="title">上课方式</Col>
@@ -54,6 +54,19 @@
           <span v-else>免费</span>
         </Col>
       </Row>
+      <Row class="list-group" v-if="course.pay_type == 1">
+        <Col span="3" class="title">价格（元）</Col>
+        <Col span="21">{{course.price}}</Col>
+      </Row>
+      <Row class="list-group" v-if="course.pay_type == 2">
+        <Col span="3" class="title">数量（个）</Col>
+        <Col span="21">{{course.price}}</Col>
+      </Row>
+      <Row class="list-group" v-if="course.pay_type == 3">
+        <Col span="3" class="title">密码</Col>
+        <Col span="21">{{course.pwd}}</Col>
+      </Row>
+
       <Row class="list-group">
         <Col span="3" class="title">课程banner</Col>
         <Col span="21">
@@ -110,6 +123,13 @@
     methods: {
       goToTeach() {
         window.open('http://wwww.zhiliaotv.com/course/teach/' + this.id)
+      },
+      formatTitle(s) {
+        if (s) {
+          return s.replace(/\s/g, '&nbsp;')
+        } else {
+          return ''
+        }
       },
       formatSolution(s) {
         if (s) {

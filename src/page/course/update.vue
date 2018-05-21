@@ -116,6 +116,9 @@
           </div>
         </FormItem>
         <FormItem label="课程简介">
+          <Input type="textarea" placeholder="请输入课程简介"
+                 :autosize="{minRows: 5}"
+                 class="mb20" v-model="title"></Input>
           <div v-for="(item,index) in courseIntro" :key="index">
             <img :src="item.url" width="280" height="190" v-if="item.url" class="mb20"/>
             <Icon type="close-circled"
@@ -153,6 +156,7 @@
     },
     data() {
       return {
+        title: '', // 课程简介标题
         isInvite: false,
         courseIntro: [],
         uploadPercent: 0,
@@ -222,7 +226,11 @@
             this.formValidate.file_name = res.file_name
             this.formValidate.file_type = res.file_type
             this.formValidate.share_gain_rate = res.share_rate
-            this.courseIntro = res.note
+            if (res.note.length > 0) {
+              this.title = res.note[0].dec
+              this.courseIntro = res.note.splice(1,res.note.length)
+            }
+
             if (res.is_share == 1) {
               this.isInvite = true
             } else {
@@ -284,13 +292,16 @@
               });
               params.images = fileIds.join('|') // 课程图片
             }
+            let intro = []
             if (this.courseIntro.length > 0) {
-              let intro = []
               this.courseIntro.forEach((item) => {
                 intro.push({fileId: item.fileId, dec: item.dec})
               })
-              params.intro = JSON.stringify(intro)
             }
+            if (this.title) {
+              intro.unshift({fileId: '', dec: this.title})
+            }
+            params.intro = JSON.stringify(intro)
             params.price = Math.floor(params.price * 10) / 10
             console.log(params)
             api.updateCourse(params).then((res) => {

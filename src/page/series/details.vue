@@ -15,8 +15,8 @@
         <h4>标题：{{series.title}}</h4>
         <p class="mt20 mb10">收费类型：
           <span v-if="series.pay_type == 1">现金收费&nbsp;&nbsp;/&nbsp;&nbsp;{{series.price}}元</span>
-          <span v-else-if="series.status == 2">智豆收费&nbsp;&nbsp;/&nbsp;&nbsp;{{series.price}}个</span>
-          <span v-else-if="series.status == 3">密码&nbsp;&nbsp;/&nbsp;&nbsp;{{series.pwd}}</span>
+          <span v-else-if="series.pay_type == 2">智豆收费&nbsp;&nbsp;/&nbsp;&nbsp;{{series.price}}个</span>
+          <span v-else-if="series.pay_type == 3">密码&nbsp;&nbsp;/&nbsp;&nbsp;{{series.pwd}}</span>
           <span v-else>免费</span>
         </p>
         <p class="grev">分类：{{categoryName}}</p>
@@ -27,7 +27,7 @@
                  icon="search" @on-click="search" @keyup.enter.native="search">
           </Input>
           <FormItem label="审核状态">
-            <Select v-model="formInline.status" style="width:200px" @on-change="selectStatus">
+            <Select v-model="formInline.status" style="width:200px" @on-change="selectStatus" clearable>
               <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
@@ -231,10 +231,16 @@
       },
       // 改变状态
       selectStatus(value) {
-        console.log(value)
-        this.formInline.page = 1
-        this.formInline.status = parseInt(value)
-        this.getSeriesPeriodList()
+        if (value) {
+          console.log(value)
+          this.formInline.page = 1
+          this.formInline.status = parseInt(value)
+          this.getSeriesPeriodList()
+        } else {
+          this.formInline.page = 1
+          this.formInline.status = ''
+          this.getSeriesPeriodList()
+        }
       },
       // 搜索
       search() {
@@ -262,7 +268,7 @@
   .seriesDetails
     .content
       .title
-        padding 40px 20px
+        padding 0 20px 40px 20px
         border-bottom 1px solid #f4f4f4
       .search
         padding 20px;
