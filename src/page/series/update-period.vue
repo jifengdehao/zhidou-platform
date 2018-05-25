@@ -59,6 +59,9 @@
           </upload-img>
         </FormItem>
         <FormItem label="课程简介">
+          <Input type="textarea" placeholder="请输入课程简介"
+                 :autosize="{minRows: 5}"
+                 class="mb20" v-model="title"></Input>
           <div v-for="(item,index) in courseIntro" :key="index">
             <img :src="item.url" width="280" height="190" v-if="item.url" class="mb20"/>
             <Icon type="close-circled"
@@ -96,6 +99,7 @@
     },
     data() {
       return {
+        title: '', //课程简介标题
         uploadStatus: false,
         courseIntro: [],// 课程简介
         videoFile: {},//上传视频文件
@@ -143,7 +147,10 @@
             this.formValidate.period_type = res.file_type
             this.formValidate.file_name = res.file_name
             this.list = res.img
-            this.courseIntro = res.note
+            if (res.note.length > 0) {
+              this.title = res.note[0].dec
+              this.courseIntro = res.note.splice(1, res.note.length)
+            }
           }
         })
       },
@@ -272,13 +279,14 @@
               });
               params.images = fileIds.join('|') // 课程图片
             }
+            let intro = []
             if (this.courseIntro.length > 0) {
-              let intro = []
               this.courseIntro.forEach((item) => {
                 intro.push({fileId: item.fileId, dec: item.dec})
               })
-              params.info = JSON.stringify(intro)
             }
+            intro.unshift({fileId: '', dec: this.title})
+            params.info = JSON.stringify(intro)
             console.log(params)
             api.updataPeriod(params).then((res) => {
               if (res) {

@@ -45,6 +45,11 @@
           <span v-else>审核中</span>
         </Col>
       </Row>
+      <Row class="list-group" v-if="course.fail_msg">
+        <Col span="3" class="title">原因</Col>
+        <Col span="21">{{course.fail_msg}}</Col>
+      </Row>
+
       <Row class="list-group">
         <Col span="3" class="title">上课类型</Col>
         <Col span="21">

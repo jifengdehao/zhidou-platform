@@ -255,9 +255,7 @@
                 intro.push({fileId: item.fileId, dec: item.dec})
               })
             }
-            if (this.title) {
-              intro.unshift({fileId: '', dec: this.title})
-            }
+            intro.unshift({fileId: '', dec: this.title})
             params.intro = JSON.stringify(intro)
             params.price = Math.floor(params.price * 10) / 10
             console.log(params)

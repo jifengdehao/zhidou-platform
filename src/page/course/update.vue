@@ -228,7 +228,7 @@
             this.formValidate.share_gain_rate = res.share_rate
             if (res.note.length > 0) {
               this.title = res.note[0].dec
-              this.courseIntro = res.note.splice(1,res.note.length)
+              this.courseIntro = res.note.splice(1, res.note.length)
             }
 
             if (res.is_share == 1) {
@@ -298,9 +298,7 @@
                 intro.push({fileId: item.fileId, dec: item.dec})
               })
             }
-            if (this.title) {
-              intro.unshift({fileId: '', dec: this.title})
-            }
+            intro.unshift({fileId: '', dec: this.title})
             params.intro = JSON.stringify(intro)
             params.price = Math.floor(params.price * 10) / 10
             console.log(params)
